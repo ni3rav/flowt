@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "next-themes"
 
 const plexSans = IBM_Plex_Sans({
   variable: "--font-plex-sans",
@@ -19,8 +20,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <body className={`${plexSans.variable} antialiased`}>{children}</body>
+      </ThemeProvider>
     </html>
   );
 }
