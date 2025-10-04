@@ -21,19 +21,6 @@ import { usePermissions } from "@/lib/hooks/usePermissions";
 import { useLogout } from "@/lib/hooks/useLogout";
 import { cn } from "@/lib/utils";
 
-const projects = [
-  {
-    name: "Manage Users",
-    url: "/manage-users",
-    icon: User,
-  },
-  {
-    name: "Approval Rules",
-    url: "/approve-rules",
-    icon: ListCheck,
-  },
-];
-
 function AppSidebarContent() {
   const { data: session } = useSession();
   const permissions = usePermissions();
