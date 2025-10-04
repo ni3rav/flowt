@@ -41,12 +41,16 @@ export default function OnboardingPage() {
       const { data, error } = await authClient.organization.create({
         name: companyName,
         slug: `${slug}-${Date.now()}`, // Add timestamp to ensure uniqueness
+        metadata: JSON.stringify({ createdAt: new Date().toISOString() }),
       });
 
       if (error) {
+        console.error("Organization creation error:", error);
         setError(error.message || "Failed to create organization");
         return;
       }
+
+      console.log("Organization created successfully:", data);
 
       // Success - redirect to dashboard
       router.push("/dashboard");

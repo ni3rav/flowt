@@ -43,7 +43,9 @@ export default function DashboardPage() {
         <p className="text-muted-foreground mt-2">
           Role:{" "}
           <span className="capitalize font-medium">
-            {permissions.role || "Loading..."}
+            {permissions.isLoading
+              ? "Loading..."
+              : permissions.role || "No role assigned"}
           </span>
         </p>
       </div>
@@ -119,25 +121,51 @@ export default function DashboardPage() {
       <div className="mt-8">
         <Card>
           <CardHeader>
-            <CardTitle>Session Info (Debug)</CardTitle>
+            <CardTitle>Debug Info</CardTitle>
+            <CardDescription>
+              Session and permission details (remove in production)
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <pre className="text-sm overflow-auto">
-              {JSON.stringify(
-                {
-                  user: session.user,
-                  role: permissions.role,
-                  organizationId: permissions.organizationId,
-                  permissions: {
-                    canApproveExpenses: permissions.canApproveExpenses,
-                    canViewAllExpenses: permissions.canViewAllExpenses,
-                    canManageUsers: permissions.canManageUsers,
-                  },
-                },
-                null,
-                2
-              )}
-            </pre>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="font-medium">Role:</span>
+                <span className="text-muted-foreground">
+                  {permissions.role || "No role assigned"}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-medium">Loading:</span>
+                <span className="text-muted-foreground">
+                  {permissions.isLoading ? "Yes" : "No"}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-medium">Organization ID:</span>
+                <span className="text-muted-foreground">
+                  {permissions.organizationId || "None"}
+                </span>
+              </div>
+              <div className="mt-4 border-t pt-4">
+                <pre className="text-xs overflow-auto bg-muted p-3 rounded-md">
+                  {JSON.stringify(
+                    {
+                      user: session.user,
+                      role: permissions.role,
+                      isLoading: permissions.isLoading,
+                      organizationId: permissions.organizationId,
+                      permissions: {
+                        canApproveExpenses: permissions.canApproveExpenses,
+                        canViewAllExpenses: permissions.canViewAllExpenses,
+                        canManageUsers: permissions.canManageUsers,
+                      },
+                    },
+                    null,
+                    2
+                  )}
+                </pre>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
