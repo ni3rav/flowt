@@ -14,11 +14,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import NavTitle from "./nav-title";
 import { useSession } from "@/lib/auth-client";
 import { usePermissions } from "@/lib/hooks/usePermissions";
 import { useLogout } from "@/lib/hooks/useLogout";
+import { cn } from "@/lib/utils";
 
 const projects = [
   {
@@ -33,10 +35,11 @@ const projects = [
   },
 ];
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+function AppSidebarContent() {
   const { data: session } = useSession();
   const { role, isLoading: isPermissionsLoading } = usePermissions();
   const { logout, isLoading: isLoggingOut } = useLogout();
+  const { state } = useSidebar();
 
   const handleLogout = async () => {
     await logout();
@@ -56,18 +59,55 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         role: undefined,
       };
 
+  const isCollapsed = state === "collapsed";
+
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+    <>
+      <SidebarHeader className="border-b border-sidebar-border">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:!p-2 bg-accent text-xl"
+              size="lg"
+              className={cn(
+                "group/header relative",
+                "hover:bg-sidebar-accent/50 transition-all duration-200",
+                isCollapsed ? "justify-center px-2" : "px-3"
+              )}
+              tooltip={isCollapsed ? "Flowt" : undefined}
             >
-              <div className="">
-                <WalletMinimal className="!size-6" />
-                <span className="font-semibold">Flowt</span>
+              <div
+                className={cn(
+                  "flex items-center gap-3 transition-all duration-200",
+                  isCollapsed && "justify-center"
+                )}
+              >
+                <div
+                  className={cn(
+                    "flex items-center justify-center rounded-lg",
+                    "bg-gradient-to-br from-primary to-primary/80",
+                    "text-primary-foreground shadow-sm",
+                    "transition-all duration-200",
+                    "group-hover/header:shadow-md group-hover/header:scale-105",
+                    isCollapsed ? "size-8" : "size-9"
+                  )}
+                >
+                  <WalletMinimal
+                    className={cn(
+                      "transition-all duration-200",
+                      isCollapsed ? "size-4" : "size-5"
+                    )}
+                  />
+                </div>
+                {!isCollapsed && (
+                  <div className="flex flex-col">
+                    <span className="text-base font-bold tracking-tight">
+                      Flowt
+                    </span>
+                    <span className="text-[10px] text-muted-foreground font-medium">
+                      Expense Management
+                    </span>
+                  </div>
+                )}
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -83,6 +123,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           isLoggingOut={isLoggingOut}
         />
       </SidebarFooter>
+    </>
+  );
+}
+
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  return (
+    <Sidebar collapsible="icon" {...props}>
+      <AppSidebarContent />
       <SidebarRail />
     </Sidebar>
   );
