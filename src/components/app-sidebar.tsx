@@ -22,24 +22,35 @@ import { usePermissions } from "@/lib/hooks/usePermissions";
 import { useLogout } from "@/lib/hooks/useLogout";
 import { cn } from "@/lib/utils";
 
-const projects = [
-  {
-    name: "Manage Users",
-    url: "#",
-    icon: User,
-  },
-  {
-    name: "Approval Rules",
-    url: "#",
-    icon: ListCheck,
-  },
-];
-
 function AppSidebarContent() {
   const { data: session } = useSession();
-  const { role, isLoading: isPermissionsLoading } = usePermissions();
+  const permissions = usePermissions();
+  const { role, isLoading: isPermissionsLoading } = permissions;
   const { logout, isLoading: isLoggingOut } = useLogout();
   const { state } = useSidebar();
+
+  // Dynamic navigation items based on permissions
+  const projects = React.useMemo(() => {
+    const items = [];
+
+    if (permissions.canManageUsers) {
+      items.push({
+        name: "Manage Users",
+        url: "#manage-users",
+        icon: User,
+      });
+    }
+
+    if (permissions.canConfigureRules) {
+      items.push({
+        name: "Approval Rules",
+        url: "#approval-rules",
+        icon: ListCheck,
+      });
+    }
+
+    return items;
+  }, [permissions.canManageUsers, permissions.canConfigureRules]);
 
   const handleLogout = async () => {
     await logout();
@@ -114,7 +125,7 @@ function AppSidebarContent() {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavProjects projects={projects} />
+        {projects.length > 0 && <NavProjects projects={projects} />}
       </SidebarContent>
       <SidebarFooter>
         <NavUser

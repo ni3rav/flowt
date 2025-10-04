@@ -15,10 +15,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import PageTitle from "@/components/page-title";
+import { ManageUsersSection } from "@/components/manage-users-section";
+import { ApprovalRulesSection } from "@/components/approval-rules-section";
 
 export default function DashboardPage() {
   const { data: session, isPending } = useSession();
-  const permissions = usePermissions();
+  const {
+    role,
+    canApproveExpenses,
+    canManageUsers,
+    canViewAllExpenses,
+    canConfigureRules,
+  } = usePermissions();
   const router = useRouter();
 
   useEffect(() => {
@@ -53,7 +61,7 @@ export default function DashboardPage() {
               <p className="text-muted-foreground mt-2">
                 Role:{" "}
                 <span className="capitalize font-medium">
-                  {permissions.role || "Loading..."}
+                  {role || "Loading..."}
                 </span>
               </p>
             </div>
@@ -81,7 +89,7 @@ export default function DashboardPage() {
                 </CardContent>
               </Card>
 
-              {permissions.canApproveExpenses && (
+              {canApproveExpenses && (
                 <Card>
                   <CardHeader>
                     <CardTitle>Pending Approvals</CardTitle>
@@ -97,7 +105,7 @@ export default function DashboardPage() {
                 </Card>
               )}
 
-              {permissions.canManageUsers && (
+              {canManageUsers && (
                 <Card>
                   <CardHeader>
                     <CardTitle>Manage Users</CardTitle>
@@ -113,7 +121,7 @@ export default function DashboardPage() {
                 </Card>
               )}
 
-              {permissions.canViewAllExpenses && (
+              {canViewAllExpenses && (
                 <Card>
                   <CardHeader>
                     <CardTitle>All Expenses</CardTitle>
@@ -130,6 +138,19 @@ export default function DashboardPage() {
               )}
             </div>
 
+            {/* Owner/Admin Sections */}
+            {canManageUsers && (
+              <div id="manage-users" className="mt-8 scroll-mt-4">
+                <ManageUsersSection />
+              </div>
+            )}
+
+            {canConfigureRules && (
+              <div id="approval-rules" className="mt-8 scroll-mt-4">
+                <ApprovalRulesSection />
+              </div>
+            )}
+
             <div className="mt-8">
               <Card>
                 <CardHeader>
@@ -140,12 +161,13 @@ export default function DashboardPage() {
                     {JSON.stringify(
                       {
                         user: session.user,
-                        role: permissions.role,
-                        organizationId: permissions.organizationId,
+                        role: role,
+                        organizationId: session.session.activeOrganizationId,
                         permissions: {
-                          canApproveExpenses: permissions.canApproveExpenses,
-                          canViewAllExpenses: permissions.canViewAllExpenses,
-                          canManageUsers: permissions.canManageUsers,
+                          canApproveExpenses: canApproveExpenses,
+                          canViewAllExpenses: canViewAllExpenses,
+                          canManageUsers: canManageUsers,
+                          canConfigureRules: canConfigureRules,
                         },
                       },
                       null,
