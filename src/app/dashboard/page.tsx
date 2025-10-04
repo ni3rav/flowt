@@ -1,10 +1,7 @@
 "use client";
 
-import { AppSidebar } from "@/components/app-sidebar"
-import {
-  SidebarInset,
-  SidebarProvider,
-} from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/app-sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useSession } from "@/lib/auth-client";
 import { usePermissions } from "@/lib/hooks/usePermissions";
 import { useRouter } from "next/navigation";
@@ -50,7 +47,9 @@ export default function DashboardPage() {
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <div className="container mx-auto p-6">
             <div className="mb-8">
-              <h1 className="text-3xl font-bold">Welcome, {session.user.name}!</h1>
+              <h1 className="text-3xl font-bold">
+                Welcome, {session.user.name}!
+              </h1>
               <p className="text-muted-foreground mt-2">
                 Role:{" "}
                 <span className="capitalize font-medium">
@@ -102,7 +101,9 @@ export default function DashboardPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle>Manage Users</CardTitle>
-                    <CardDescription>Add and manage team members</CardDescription>
+                    <CardDescription>
+                      Add and manage team members
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <Button variant="outline" className="w-full">
@@ -116,7 +117,9 @@ export default function DashboardPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle>All Expenses</CardTitle>
-                    <CardDescription>View all organization expenses</CardDescription>
+                    <CardDescription>
+                      View all organization expenses
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <Button variant="outline" className="w-full">
@@ -156,5 +159,5 @@ export default function DashboardPage() {
         </div>
       </SidebarInset>
     </SidebarProvider>
-  )
+  );
 }

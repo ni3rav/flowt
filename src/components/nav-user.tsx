@@ -1,20 +1,27 @@
-"use client"
+"use client";
 
-import { LogOut } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
-import { cn } from "@/lib/utils"
+import { LogOut, Loader2 } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
 
 export function NavUser({
   user,
   onLogout,
+  isLoggingOut,
 }: {
   user: {
-    name: string
-    email: string
-    avatar?: string
-  }
-  onLogout?: () => void
+    name: string;
+    email: string;
+    avatar?: string;
+    role?: string;
+  };
+  onLogout?: () => void;
+  isLoggingOut?: boolean;
 }) {
   return (
     <SidebarMenu>
@@ -37,7 +44,11 @@ export function NavUser({
             <div className="flex flex-col text-left overflow-hidden">
               <span className="truncate font-medium text-sm">{user.name}</span>
               <span className="truncate text-xs text-muted-foreground">
-                {user.email}
+                {user.role ? (
+                  <span className="capitalize">{user.role}</span>
+                ) : (
+                  user.email
+                )}
               </span>
             </div>
           </div>
@@ -45,13 +56,18 @@ export function NavUser({
           {/* Right: Logout */}
           <button
             onClick={onLogout}
-            className="rounded-md p-2 text-muted-foreground hover:bg-destructive hover:text-destructive-foreground transition"
+            disabled={isLoggingOut}
+            className="rounded-md p-2 text-muted-foreground hover:bg-destructive hover:text-destructive-foreground transition disabled:opacity-50 disabled:cursor-not-allowed"
             title="Log out"
           >
-            <LogOut className="h-4 w-4" />
+            {isLoggingOut ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <LogOut className="h-4 w-4" />
+            )}
           </button>
         </SidebarMenuButton>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }

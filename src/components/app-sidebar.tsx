@@ -1,14 +1,10 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import {
-  ListCheck,
-  User,
-  WalletMinimal,
-} from "lucide-react"
+import * as React from "react";
+import { ListCheck, User, WalletMinimal } from "lucide-react";
 
-import { NavProjects } from "@/components/nav-projects"
-import { NavUser } from "@/components/nav-user"
+import { NavProjects } from "@/components/nav-projects";
+import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -18,30 +14,48 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar"
-import NavTitle from "./nav-title"
+} from "@/components/ui/sidebar";
+import NavTitle from "./nav-title";
+import { useSession } from "@/lib/auth-client";
+import { usePermissions } from "@/lib/hooks/usePermissions";
+import { useLogout } from "@/lib/hooks/useLogout";
 
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+const projects = [
+  {
+    name: "Manage Users",
+    url: "#",
+    icon: User,
   },
-  projects: [
-    {
-      name: "Manage Users",
-      url: "#",
-      icon: User,
-    },
-    {
-      name: "Approval Rules",
-      url: "#",
-      icon: ListCheck,
-    },
-  ],
-}
+  {
+    name: "Approval Rules",
+    url: "#",
+    icon: ListCheck,
+  },
+];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data: session } = useSession();
+  const { role, isLoading: isPermissionsLoading } = usePermissions();
+  const { logout, isLoading: isLoggingOut } = useLogout();
+
+  const handleLogout = async () => {
+    await logout();
+  };
+
+  const user = session?.user
+    ? {
+        name: session.user.name || "User",
+        email: session.user.email || "",
+        avatar: session.user.image,
+        role: isPermissionsLoading ? undefined : role,
+      }
+    : {
+        name: "Guest",
+        email: "",
+        avatar: undefined,
+        role: undefined,
+      };
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -60,12 +74,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavProjects projects={data.projects} />
+        <NavProjects projects={projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser
+          user={user}
+          onLogout={handleLogout}
+          isLoggingOut={isLoggingOut}
+        />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }
