@@ -16,7 +16,6 @@ import {
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
-import NavTitle from "./nav-title";
 import { useSession } from "@/lib/auth-client";
 import { usePermissions } from "@/lib/hooks/usePermissions";
 import { useLogout } from "@/lib/hooks/useLogout";
