@@ -37,7 +37,7 @@ export function usePermissions() {
     if (!dbRole) return undefined;
     // Map "member" from database to "employee" in the app
     if (dbRole === "member") return "employee";
-    return dbRole as "employee" | "manager" | "admin";
+    return dbRole as "employee" | "manager" | "owner";
   };
 
   const role = normalizeRole(activeMember?.role);
@@ -45,7 +45,7 @@ export function usePermissions() {
 
   const isEmployee = role === "employee";
   const isManager = role === "manager";
-  const isAdmin = role === "admin";
+  const isAdmin = role === "owner";
 
   return {
     role,
