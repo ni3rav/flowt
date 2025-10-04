@@ -45,7 +45,6 @@ export default function DashboardPage() {
 
   return (
     <>
-      <PageTitle />
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="container mx-auto p-6">
           <div className="mb-8">

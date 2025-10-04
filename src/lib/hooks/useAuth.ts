@@ -24,6 +24,20 @@ export function useAuth() {
         return { success: false, error: error.message };
       }
 
+      // After successful login, check and set active organization
+      try {
+        const orgsResponse = await authClient.organization.list();
+        if (orgsResponse.data && orgsResponse.data.length > 0) {
+          // Set the first organization as active if none is set
+          await authClient.organization.setActive({
+            organizationId: orgsResponse.data[0].id,
+          });
+        }
+      } catch (orgError) {
+        console.error("Error setting active organization:", orgError);
+        // Continue to dashboard even if this fails
+      }
+
       // Successful login - redirect to dashboard
       router.push("/dashboard");
       return { success: true, data };

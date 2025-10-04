@@ -67,6 +67,13 @@ export default function OnboardingPage() {
 
       console.log("Organization created successfully:", result.data);
 
+      // Set the newly created organization as active
+      await authClient.organization.setActive({
+        organizationId: result.data.id,
+      });
+
+      console.log("Active organization set to:", result.data.id);
+
       // Small delay to ensure the session is updated
       await new Promise((resolve) => setTimeout(resolve, 500));
 
