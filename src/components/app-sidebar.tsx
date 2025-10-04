@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ListCheck, User, WalletMinimal } from "lucide-react";
+import { Home, ListCheck, User, WalletMinimal } from "lucide-react";
 
 import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
@@ -30,12 +30,18 @@ function AppSidebarContent() {
 
   // Dynamic navigation items based on permissions
   const projects = React.useMemo(() => {
-    const items = [];
+    const items = [
+      {
+        name: "Dashboard",
+        url: "/dashboard",
+        icon: Home,
+      },
+    ];
 
     if (permissions.canManageUsers) {
       items.push({
         name: "Manage Users",
-        url: "#manage-users",
+        url: "/dashboard/manage-users",
         icon: User,
       });
     }
@@ -43,7 +49,7 @@ function AppSidebarContent() {
     if (permissions.canConfigureRules) {
       items.push({
         name: "Approval Rules",
-        url: "#approval-rules",
+        url: "/dashboard/approval-rules",
         icon: ListCheck,
       });
     }
@@ -124,7 +130,7 @@ function AppSidebarContent() {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        {projects.length > 0 && <NavProjects projects={projects} />}
+        <NavProjects projects={projects} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser
