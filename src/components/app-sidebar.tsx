@@ -49,7 +49,7 @@ function AppSidebarContent() {
     ? {
         name: session.user.name || "User",
         email: session.user.email || "",
-        avatar: session.user.image,
+        avatar: session.user.image || undefined,
         role: isPermissionsLoading ? undefined : role,
       }
     : {
