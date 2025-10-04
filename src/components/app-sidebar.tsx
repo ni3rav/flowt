@@ -24,12 +24,12 @@ import { cn } from "@/lib/utils";
 const projects = [
   {
     name: "Manage Users",
-    url: "#",
+    url: "/manage-users",
     icon: User,
   },
   {
     name: "Approval Rules",
-    url: "#",
+    url: "/approve-rules",
     icon: ListCheck,
   },
 ];
