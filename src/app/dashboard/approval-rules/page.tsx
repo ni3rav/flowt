@@ -1,11 +1,10 @@
 "use client";
 
+import ApprovalRulesForm from "@/components/approval-rules-section";
 import { useSession } from "@/lib/auth-client";
 import { usePermissions } from "@/lib/hooks/usePermissions";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import PageTitle from "@/components/page-title";
-import { ApprovalRulesSection } from "@/components/approval-rules-section";
 
 export default function ApprovalRulesPage() {
   const { data: session, isPending } = useSession();
@@ -36,9 +35,8 @@ export default function ApprovalRulesPage() {
 
   return (
     <>
-      <PageTitle />
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <ApprovalRulesSection />
+        <ApprovalRulesForm />
       </div>
     </>
   );

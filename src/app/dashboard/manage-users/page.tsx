@@ -35,7 +35,6 @@ export default function ManageUsersPage() {
 
   return (
     <>
-      <PageTitle />
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <ManageUsersSection />
       </div>
