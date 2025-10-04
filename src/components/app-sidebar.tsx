@@ -22,8 +22,9 @@ import { usePermissions } from "@/lib/hooks/usePermissions";
 import { useLogout } from "@/lib/hooks/useLogout";
 import { cn } from "@/lib/utils";
 
-const projects = [
-  {
+const menuItems = {
+  owner: [
+    {
     name: "Manage Users",
     url: "#",
     icon: User,
@@ -33,7 +34,30 @@ const projects = [
     url: "#",
     icon: ListCheck,
   },
-];
+],
+
+  employee: [
+    {
+      name: "My Expenses",
+      url: "#",
+      icon: WalletMinimal,
+    },
+    {
+      name: "New Expense",
+      url: "#",
+      icon: WalletMinimal,
+    },
+
+  ],
+  manager: [
+    {
+      name: "Approvals",
+      url: "#",
+      icon: ListCheck,
+    },
+
+  ]
+};
 
 function AppSidebarContent() {
   const { data: session } = useSession();
@@ -43,6 +67,12 @@ function AppSidebarContent() {
 
   const handleLogout = async () => {
     await logout();
+  };
+type UserRole = 'owner' | 'employee' | 'manager';
+
+  const getMenuItemsByRole = () => {
+    if (!role || isPermissionsLoading) return [];
+    return menuItems[role as UserRole] || [];
   };
 
   const user = session?.user
@@ -60,6 +90,8 @@ function AppSidebarContent() {
       };
 
   const isCollapsed = state === "collapsed";
+      
+  const activeMenuItems = getMenuItemsByRole();
 
   return (
     <>
@@ -114,7 +146,7 @@ function AppSidebarContent() {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavProjects projects={projects} />
+        <NavProjects projects={activeMenuItems} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser
