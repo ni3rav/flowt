@@ -1,4 +1,10 @@
-import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  text,
+  timestamp,
+  boolean,
+  integer,
+} from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -97,4 +103,64 @@ export const invitation = pgTable("invitation", {
   inviterId: text("inviter_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
+});
+
+// Approval Rules Tables
+export const approvalRule = pgTable("approval_rule", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  organizationId: text("organization_id")
+    .notNull()
+    .references(() => organization.id, { onDelete: "cascade" }),
+  ruleName: text("rule_name").notNull(),
+  isSequential: boolean("is_sequential").default(false).notNull(),
+  minimumApprovalPercentage: integer("minimum_approval_percentage"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
+
+export const approvalRuleApprover = pgTable("approval_rule_approver", {
+  id: text("id").primaryKey(),
+  approvalRuleId: text("approval_rule_id")
+    .notNull()
+    .references(() => approvalRule.id, { onDelete: "cascade" }),
+  approverUserId: text("approver_user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  sequenceOrder: integer("sequence_order"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const approvalRequest = pgTable("approval_request", {
+  id: text("id").primaryKey(),
+  approvalRuleId: text("approval_rule_id")
+    .notNull()
+    .references(() => approvalRule.id, { onDelete: "cascade" }),
+  requestedByUserId: text("requested_by_user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  status: text("status").default("pending").notNull(), // 'pending', 'approved', 'rejected'
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
+
+export const approvalAction = pgTable("approval_action", {
+  id: text("id").primaryKey(),
+  approvalRequestId: text("approval_request_id")
+    .notNull()
+    .references(() => approvalRequest.id, { onDelete: "cascade" }),
+  approverUserId: text("approver_user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  action: text("action").default("pending").notNull(), // 'pending', 'approved', 'rejected'
+  notes: text("notes"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
