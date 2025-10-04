@@ -36,6 +36,21 @@ export const auth = betterAuth({
             },
           },
         },
+        member: {
+          additionalFields: {
+            managerId: {
+              type: "string",
+              required: false,
+              input: false,
+            },
+            isManagerApprover: {
+              type: "boolean",
+              required: false,
+              defaultValue: true,
+              input: false,
+            },
+          },
+        },
       },
     }),
     nextCookies(),

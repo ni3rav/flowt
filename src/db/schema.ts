@@ -81,6 +81,8 @@ export const member = pgTable("member", {
     .references(() => user.id, { onDelete: "cascade" }),
   role: text("role").default("member").notNull(),
   createdAt: timestamp("created_at").notNull(),
+  managerId: text("manager_id"),
+  isManagerApprover: boolean("is_manager_approver").default(true),
 });
 
 export const invitation = pgTable("invitation", {
