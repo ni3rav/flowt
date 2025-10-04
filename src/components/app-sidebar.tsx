@@ -2,9 +2,9 @@
 
 import * as React from "react"
 import {
-  GalleryVerticalEnd,
   ListCheck,
   User,
+  WalletMinimal,
 } from "lucide-react"
 
 import { NavProjects } from "@/components/nav-projects"
@@ -14,9 +14,12 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
   SidebarRail,
-  SidebarTrigger,
 } from "@/components/ui/sidebar"
+import NavTitle from "./nav-title"
 
 const data = {
   user: {
@@ -42,7 +45,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <SidebarTrigger />
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              className="data-[slot=sidebar-menu-button]:!p-2 bg-accent text-xl"
+            >
+              <div className="">
+                <WalletMinimal className="!size-6" />
+                <span className="font-semibold">Flowt</span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <NavProjects projects={data.projects} />
