@@ -68,6 +68,7 @@ export const organization = pgTable("organization", {
   logo: text("logo"),
   createdAt: timestamp("created_at").notNull(),
   metadata: text("metadata"),
+  country: text("country").default("IN"),
 });
 
 export const member = pgTable("member", {

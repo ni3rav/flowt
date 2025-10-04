@@ -4,7 +4,7 @@ import { db } from "@/db";
 import * as schema from "@/db/schema";
 import { nextCookies } from "better-auth/next-js";
 import { organization } from "better-auth/plugins/organization";
-import { ac, admin, member, owner } from "./permissions";
+import { ac, admin, manager, employee } from "./permissions";
 
 export const auth = betterAuth({
   emailAndPassword: {
@@ -21,9 +21,21 @@ export const auth = betterAuth({
     organization({
       ac,
       roles: {
-        member,
+        employee,
+        manager,
         admin,
-        owner,
+      },
+      schema: {
+        organization: {
+          additionalFields: {
+            country: {
+              type: "string",
+              required: false,
+              defaultValue: "IN",
+              input: false,
+            },
+          },
+        },
       },
     }),
     nextCookies(),
