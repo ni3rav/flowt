@@ -38,23 +38,42 @@ export default function OnboardingPage() {
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-|-$/g, "");
 
-      const { data, error } = await authClient.organization.create({
+      console.log("Creating organization with:", {
         name: companyName,
-        slug: `${slug}-${Date.now()}`, // Add timestamp to ensure uniqueness
-        metadata: JSON.stringify({ createdAt: new Date().toISOString() }),
+        slug: `${slug}-${Date.now()}`,
       });
 
-      if (error) {
-        console.error("Organization creation error:", error);
-        setError(error.message || "Failed to create organization");
+      const result = await authClient.organization.create({
+        name: companyName,
+        slug: `${slug}-${Date.now()}`, // Add timestamp to ensure uniqueness
+      });
+
+      console.log("Organization creation result:", result);
+
+      if (result.error) {
+        console.error("Organization creation error:", result.error);
+        setError(
+          result.error.message ||
+            JSON.stringify(result.error) ||
+            "Failed to create organization"
+        );
         return;
       }
 
-      console.log("Organization created successfully:", data);
+      if (!result.data) {
+        setError("Organization created but no data returned");
+        return;
+      }
+
+      console.log("Organization created successfully:", result.data);
+
+      // Small delay to ensure the session is updated
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Success - redirect to dashboard
       router.push("/dashboard");
     } catch (err) {
+      console.error("Exception during organization creation:", err);
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
       setIsLoading(false);
